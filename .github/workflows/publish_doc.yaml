@@ -1,0 +1,45 @@
+﻿name: Publish Game Documentation
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  pages: write
+  deployments: write
+  id-token: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+  
+      - name: Check Installed Software
+        run: git --version && python3 --version && doxygen -v
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - name: Run Doxygen
+        run: python3 devtools/main.py doc create
+
+      - name: Upload Docs
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: Documentation/html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Deploy To GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
