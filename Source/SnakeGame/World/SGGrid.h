@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Core/Types.h"
 #include "GameFramework/Actor.h"
+#include "World/SGWorldTypes.h"
 #include "SGGrid.generated.h"
 
 // Forward declaration
@@ -29,10 +30,25 @@ public:
 
     FORCEINLINE uint32 GetHeightWorld() const { return CoreGridSize.height * CellSizeWorld; }
 
+    /**
+     * Updates line, wall and background colors
+     * @param Colors colors data
+     */
+    void UpdateColors(const FSGColors& Colors);
+
 protected:
+    UPROPERTY(VisibleAnywhere)
+    USceneComponent* Origin;
+
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* GridMesh;
+
     virtual void BeginPlay() override;
 
 private:
+    UPROPERTY()
+    UMaterialInstanceDynamic* GridMaterial;
+
     // Cell size in UE units (сm)
     uint32 CellSizeWorld{0};
     CoreGame::Size CoreGridSize;
