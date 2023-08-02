@@ -12,14 +12,14 @@ struct FSGColors : public FTableRowBase
     GENERATED_BODY();
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    FLinearColor GridBackgroundColor;
+    FLinearColor GridBackgroundColor{ForceInit};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    FLinearColor GridLineColor;
+    FLinearColor GridLineColor{ForceInit};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    FLinearColor GridWallColor;
+    FLinearColor GridWallColor{ForceInit};
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    FLinearColor SceneBackgroundColor;
+    FLinearColor SceneBackgroundColor{ForceInit};
 };
