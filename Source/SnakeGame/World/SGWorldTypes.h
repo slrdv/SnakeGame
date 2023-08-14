@@ -22,4 +22,10 @@ struct FSGColors : public FTableRowBase
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FLinearColor SceneBackgroundColor{ForceInit};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor SnakeHeadColor{ForceInit};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor SnakeBodyColor{ForceInit};
 };

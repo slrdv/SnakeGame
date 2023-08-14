@@ -10,7 +10,18 @@ using namespace CoreGame;
 Grid::Grid(const Size& size) : s_size(Size{size.width + 2, size.height + 2})
 {
     initGrid();
-    printDebug();
+}
+
+void Grid::updateSnake(const PositionListNode* head)
+{
+    clear(CellType::Snake);
+
+    auto* current = head;
+    while (current)
+    {
+        m_cells[posToIndex(current->GetValue())] = CellType::Snake;
+        current = current->GetNextNode();
+    }
 }
 
 void Grid::initGrid()
@@ -28,6 +39,17 @@ void Grid::initGrid()
     }
 }
 
+void Grid::clear(CellType cellType)
+{
+    for (auto& cell : m_cells)
+    {
+        if (cell == cellType)
+        {
+            cell = CellType::Empty;
+        }
+    }
+}
+
 void Grid::printDebug() const
 {
 // Remove from shipping build
@@ -40,8 +62,9 @@ void Grid::printDebug() const
         {
             switch (m_cells[posToIndex(x, y)])
             {
-                case CellType::Empty: sym = '.'; break;
-                case CellType::Wall: sym = '*'; break;
+                case CellType::Empty: sym = '-'; break;
+                case CellType::Wall: sym = '#'; break;
+                case CellType::Snake: sym = '*'; break;
                 default: sym = '?';
             }
             line.AppendChar(sym).AppendChar(' ');
