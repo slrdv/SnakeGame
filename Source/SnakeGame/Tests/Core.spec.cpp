@@ -17,7 +17,9 @@ void FCoreGame::Define()
             It("GridShouldExists",
                 [this]()
                 {
-                    constexpr CoreGame::Settings GameSettings{5, 5};
+                    CoreGame::Settings GameSettings;
+                    GameSettings.gridSize = CoreGame::Size{10, 10};
+                    GameSettings.snakePosition = CoreGame::Grid::getCenter(GameSettings.gridSize);
                     CoreGame::Game Game{GameSettings};
                     TestTrueExpr(Game.getGrid().IsValid());
                 });

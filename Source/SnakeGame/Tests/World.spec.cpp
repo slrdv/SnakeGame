@@ -8,6 +8,7 @@
 #include "Misc/AutomationTest.h"
 #include "Game/SGGameMode.h"
 #include "Game/SGPawn.h"
+#include "World/SGGrid.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Components/ExponentialHeightFogComponent.h"
