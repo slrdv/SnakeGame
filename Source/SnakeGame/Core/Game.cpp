@@ -11,8 +11,8 @@ Game::Game(const Settings& settings) : c_settings(settings)
     m_grid = MakeShared<Grid>(settings.gridSize);
     m_snake = MakeShared<Snake>(settings.snakeLength, settings.snakePosition);
 
-    m_grid.Get()->updateSnake(m_snake.Get()->head());
-    m_grid.Get()->printDebug();
+    m_grid->updateSnake(m_snake->head());
+    m_grid->printDebug();
 }
 
 bool Game::updateTime(float delta)
@@ -40,6 +40,6 @@ void Game::update(float delta, const Input& input)
     hitTest();
     if (m_gameOver) return;
 
-    m_grid->updateSnake(m_snake.Get()->head());
+    m_grid->updateSnake(m_snake->head());
     m_grid->printDebug();
 }

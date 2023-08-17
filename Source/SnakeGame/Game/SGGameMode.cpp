@@ -27,7 +27,7 @@ void ASGGameMode::StartPlay()
     check(GetWorld());
 
     Game = MakeUnique<CoreGame::Game>(GetGameSettings());
-    if (!Game.IsValid())
+    if (!Game)
     {
         UE_LOG(SGLogGameMode, Fatal, TEXT("Game model is null! Abort."))
     }
@@ -38,7 +38,7 @@ void ASGGameMode::StartPlay()
     GridView = GetWorld()->SpawnActorDeferred<ASGGrid>(GridViewClass, GridOrigin);
     check(GridView);
 
-    check(Game->getGrid().IsValid());
+    check(Game->getGrid());
     GridView->SetModel(Game->getGrid(), CellSizeWorld);
 
     // Finishing spawn, after that actors BeginPlay will be called
@@ -94,7 +94,7 @@ CoreGame::Settings ASGGameMode::GetGameSettings() const
     CoreGame::Settings Settings;
     Settings.gridSize = CoreGame::Size{GridSize.X, GridSize.Y};
     Settings.snakeLength = SnakeDefaultLength;
-    Settings.snakePosition = CoreGame::Position{GridSize.X / 2, GridSize.Y / 2};
+    Settings.snakePosition = CoreGame::Grid::getCenter(Settings.gridSize);
     Settings.tickInterval = GameTickInterval;
 
     return Settings;
