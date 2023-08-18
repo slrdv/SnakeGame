@@ -7,6 +7,7 @@
 #include "Core/Game.h"
 #include "World/SGGrid.h"
 #include "World/SGSnake.h"
+#include "World/SGFood.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -49,6 +50,11 @@ void ASGGameMode::StartPlay()
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
     SnakeView->FinishSpawning(GridOrigin);
 
+    FoodView = GetWorld()->SpawnActorDeferred<ASGFood>(FoodViewClass, GridOrigin);
+    check(FoodView);
+    FoodView->SetModel(Game->getFood(), CellSizeWorld, Game->getGrid()->getSize());
+    FoodView->FinishSpawning(GridOrigin);
+
     const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
     check(PlayerController);
     ASGPawn* Pawn = Cast<ASGPawn>(PlayerController->GetPawn());
@@ -70,6 +76,7 @@ void ASGGameMode::UpdateColors(uint32 TableRowIndex)
 
     GridView->UpdateColors(*Colors);
     SnakeView->SetColor(*Colors);
+    FoodView->SetColor(*Colors);
 
     auto* Fog = Cast<AExponentialHeightFog>(UGameplayStatics::GetActorOfClass(GetWorld(), AExponentialHeightFog::StaticClass()));
     if (!Fog || !Fog->GetComponent()) return;
@@ -107,6 +114,7 @@ void ASGGameMode::ResetGame()
     Input = CoreGame::Input::Default;
     GridView->SetModel(Game->getGrid(), CellSizeWorld);
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
+    FoodView->SetModel(Game->getFood(), CellSizeWorld, Game->getGrid()->getSize());
     UpdateColors(ColorsDataTableRowIndex);
 }
 

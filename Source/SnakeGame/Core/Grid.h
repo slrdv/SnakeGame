@@ -24,7 +24,11 @@ namespace CoreGame
 
         void updateSnake(const PositionListNode* head);
 
+        void updateFood(const Position& foodPosition);
+
         void printDebug() const;
+
+        bool getRandomEmptyPosition(Position& outPosition) const;
 
     private:
         const Size s_size;
@@ -35,7 +39,10 @@ namespace CoreGame
         void clear(CellType cellType);
 
         FORCEINLINE uint32 posToIndex(uint32 x, uint32 y) const { return y * s_size.width + x; }
+
         FORCEINLINE uint32 posToIndex(const Position& position) const { return posToIndex(position.x, position.y); }
+
+        FORCEINLINE Position indexToPos(uint32 index) const { return {index % s_size.width, index / s_size.width}; }
     };
 
 }  // namespace CoreGame

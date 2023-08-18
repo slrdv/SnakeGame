@@ -32,7 +32,8 @@ namespace CoreGame
     {
         Empty = 0,
         Wall,
-        Snake
+        Snake,
+        Food
     };
 
     struct Input

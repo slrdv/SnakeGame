@@ -6,6 +6,7 @@
 #include "Types.h"
 #include "Grid.h"
 #include "Snake.h"
+#include "Food.h"
 
 namespace CoreGame
 {
@@ -20,6 +21,7 @@ namespace CoreGame
          */
         TSharedPtr<Grid> getGrid() const { return m_grid; }
         TSharedPtr<Snake> getSnake() const { return m_snake; }
+        TSharedPtr<Food> getFood() const { return m_food; }
 
         void update(float delta, const Input& input);
 
@@ -27,11 +29,16 @@ namespace CoreGame
         const Settings c_settings;
         TSharedPtr<Grid> m_grid;
         TSharedPtr<Snake> m_snake;
+        TSharedPtr<Food> m_food;
         float m_timeAcc{0.0f};
         bool m_gameOver{false};
+        uint32 m_score{0};
 
         bool updateTime(float delta);
-        void hitTest();
+
+        void checkHit();
+
+        void updateFoodPosition();
     };
 
 }  // namespace CoreGame

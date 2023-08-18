@@ -26,3 +26,8 @@ void Snake::move(const Input& input)
     const Position& headPosition = head()->GetValue();
     m_links.AddHead(Position{headPosition.x + m_currentInput.x, headPosition.y + m_currentInput.y});
 }
+
+void Snake::feed()
+{
+    m_links.AddTail(m_links.GetTail()->GetValue());
+}

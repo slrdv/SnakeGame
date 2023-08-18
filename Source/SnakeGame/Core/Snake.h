@@ -17,6 +17,8 @@ namespace CoreGame
 
         void move(const Input& input);
 
+        void feed();
+
     private:
         PositionList m_links;
         Input m_currentInput = Input::Default;

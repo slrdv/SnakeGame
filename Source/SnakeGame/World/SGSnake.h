@@ -41,7 +41,9 @@ private:
     uint32 CellSizeWorld;
     CoreGame::Size GridSize;
 
+    FLinearColor BodyColor;
+
     void CreateLinks();
 
-    void UpdateLinkPosition(ASGSnakeLink* Link, const CoreGame::Position& GridPosition);
+    ASGSnakeLink* SpawnLink(const CoreGame::Position& Position, TSubclassOf<ASGSnakeLink> LinkClass);
 };
