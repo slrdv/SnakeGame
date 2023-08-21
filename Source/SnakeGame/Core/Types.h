@@ -18,6 +18,10 @@ namespace CoreGame
 
         uint32 x;
         uint32 y;
+
+        FORCEINLINE bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
+        FORCEINLINE Position operator+(const Position& rhs) const { return Position(x + rhs.x, y + rhs.y); }
+        FORCEINLINE Position operator-(const Position& rhs) const { return Position(x - rhs.x, y - rhs.y); }
     };
 
     struct Settings
