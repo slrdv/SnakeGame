@@ -9,6 +9,8 @@
 #include "Game/SGGameMode.h"
 #include "Game/SGPawn.h"
 #include "World/SGGrid.h"
+#include "World/SGFood.h"
+#include "World/SGSnake.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -70,13 +72,18 @@ void FSnakeGameWorld::Define()
                     World = GetTestGameWorld();
                 });
 
-            It("GridIsExistAndUnique",
+            It("GameActorsIsExistAndUnique",
                 [this]()
                 {
                     TArray<AActor*> Actors;
                     UGameplayStatics::GetAllActorsOfClass(World, ASGGrid::StaticClass(), Actors);
-                    TestTrue("Grid is unique", Actors.Num() == 1);
-                    TestNotNull("Grid is exist", Actors[0]);
+                    TestTrue("Grid is exists and unique", Actors.Num() == 1 && Actors[0]);
+
+                    UGameplayStatics::GetAllActorsOfClass(World, ASGSnake::StaticClass(), Actors);
+                    TestTrue("Snake is exists and unique", Actors.Num() == 1 && Actors[0]);
+
+                    UGameplayStatics::GetAllActorsOfClass(World, ASGFood::StaticClass(), Actors);
+                    TestTrue("Food is exists and unique", Actors.Num() == 1 && Actors[0]);
                 });
 
             It("SceneColorShouldBeSetupCorrectly",
@@ -86,7 +93,7 @@ void FSnakeGameWorld::Define()
                     auto* ColorsDataTable = GameMode->GetColorsDataTable();
 
                     FSGColors Colors;
-                    Colors.SceneBackgroundColor = FLinearColor::MakeRandomColor();
+                    Colors.SceneBackgroundColor = FLinearColor::Red;
 
                     const FName RowName = FName(FGuid::NewGuid().ToString());
                     ColorsDataTable->AddRow(RowName, Colors);
@@ -136,13 +143,14 @@ void FSnakeGameWorld::Define()
                     TestTrueExpr(GridMesh->GetRelativeScale3D().Equals(FVector(HeightWorld / Size.X, WidthWorld / Size.Y, 1.0)));
                     TestTrueExpr(GridMesh->GetRelativeLocation().Equals(0.5 * FVector(HeightWorld, WidthWorld, -Size.Z)));
                 });
+
             It("GridHaveCorrectColors",
                 [this]()
                 {
                     FSGColors Colors;
-                    Colors.GridBackgroundColor = FLinearColor::MakeRandomColor();
-                    Colors.GridLineColor = FLinearColor::MakeRandomColor();
-                    Colors.GridWallColor = FLinearColor::MakeRandomColor();
+                    Colors.GridBackgroundColor = FLinearColor::Red;
+                    Colors.GridLineColor = FLinearColor::Blue;
+                    Colors.GridWallColor = FLinearColor::Green;
 
                     Grid->UpdateColors(Colors);
 

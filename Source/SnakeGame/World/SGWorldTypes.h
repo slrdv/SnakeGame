@@ -28,4 +28,7 @@ struct FSGColors : public FTableRowBase
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FLinearColor SnakeBodyColor{ForceInit};
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor FoodColor{ForceInit};
 };

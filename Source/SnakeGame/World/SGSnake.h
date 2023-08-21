@@ -18,8 +18,18 @@ class SNAKEGAME_API ASGSnake : public AActor
 public:
     ASGSnake();
 
+    /**
+     * Set Snake actor model
+     * @param SnakeModel snake model object
+     * @param InCellSizeWorld  world size of the cell in UE units
+     * @param InGridSize grid size
+     */
     void SetModel(const TSharedPtr<CoreGame::Snake>& SnakeModel, uint32 InCellSizeWorld, const CoreGame::Size& InGridSize);
 
+    /**
+     * Updates Snake actor colors
+     * @param Colors colors data
+     */
     void SetColor(const FSGColors& Colors);
 
     virtual void Tick(float DeltaTime) override;
@@ -41,7 +51,9 @@ private:
     uint32 CellSizeWorld;
     CoreGame::Size GridSize;
 
+    FLinearColor BodyColor;
+
     void CreateLinks();
 
-    void UpdateLinkPosition(ASGSnakeLink* Link, const CoreGame::Position& GridPosition);
+    ASGSnakeLink* SpawnLink(const CoreGame::Position& Position, TSubclassOf<ASGSnakeLink> LinkClass);
 };

@@ -11,6 +11,7 @@
 
 class ASGSnake;
 class ASGGrid;
+class ASGFood;
 class UInputAction;
 class UInputMappingContext;
 
@@ -54,6 +55,9 @@ protected:
     TSubclassOf<ASGSnake> SnakeViewClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Design")
+    TSubclassOf<ASGFood> FoodViewClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
     TObjectPtr<UDataTable> ColorsDataTable;
 
     UPROPERTY(EditDefaultsOnly, Category = "GameInput")
@@ -81,6 +85,9 @@ private:
 
     UPROPERTY()
     TObjectPtr<ASGSnake> SnakeView;
+
+    UPROPERTY()
+    TObjectPtr<ASGFood> FoodView;
 
     UFUNCTION(Exec, Category = "Debug")
     void NextColor();

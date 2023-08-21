@@ -24,6 +24,12 @@ void Grid::updateSnake(const PositionListNode* head)
     }
 }
 
+void Grid::updateFood(const Position& foodPosition)
+{
+    clear(CellType::Food);
+    m_cells[posToIndex(foodPosition)] = CellType::Food;
+}
+
 void Grid::initGrid()
 {
     m_cells.Init(CellType::Empty, s_size.width * s_size.height);
@@ -50,6 +56,30 @@ void Grid::clear(CellType cellType)
     }
 }
 
+bool Grid::getRandomEmptyPosition(Position& outPosition) const
+{
+    const uint32 randomIndex = FMath::RandRange(0, m_cells.Num() - 1);
+
+    uint32 i = randomIndex;
+    do
+    {
+        i = (i + 1) % m_cells.Num();
+        if (m_cells[i] == CellType::Empty)
+        {
+            outPosition = indexToPos(i);
+            return true;
+        }
+    } while (i != randomIndex);
+
+    return false;
+}
+
+bool Grid::isEmpty(const Position& position) const
+{
+    const uint32 index = posToIndex(position);
+    return index < static_cast<uint32>(m_cells.Num()) && m_cells[index] == CellType::Empty;
+}
+
 void Grid::printDebug() const
 {
 // Remove from shipping build
@@ -65,6 +95,7 @@ void Grid::printDebug() const
                 case CellType::Empty: sym = '-'; break;
                 case CellType::Wall: sym = '#'; break;
                 case CellType::Snake: sym = '*'; break;
+                case CellType::Food: sym = '@'; break;
                 default: sym = '?';
             }
             line.AppendChar(sym).AppendChar(' ');

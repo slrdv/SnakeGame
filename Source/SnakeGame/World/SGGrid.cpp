@@ -34,13 +34,13 @@ void ASGGrid::Tick(float DeltaTime)
 void ASGGrid::SetModel(const TSharedPtr<CoreGame::Grid>& Grid, uint32 CellSize)
 {
     CellSizeWorld = CellSize;
-    if (!Grid.IsValid())
+    if (!Grid)
     {
         // Crash if Grid isn't valid (verbosity Fatal)
         UE_LOG(SGLogGrid, Fatal, TEXT("Grid model is null! Abort."))
     }
 
-    CoreGridSize = Grid.Get()->getSize();
+    CoreGridSize = Grid->getSize();
 
     // Scale grid mesh
     check(GridMesh->GetStaticMesh());

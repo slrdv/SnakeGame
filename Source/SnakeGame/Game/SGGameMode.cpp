@@ -7,6 +7,7 @@
 #include "Core/Game.h"
 #include "World/SGGrid.h"
 #include "World/SGSnake.h"
+#include "World/SGFood.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -27,7 +28,7 @@ void ASGGameMode::StartPlay()
     check(GetWorld());
 
     Game = MakeUnique<CoreGame::Game>(GetGameSettings());
-    if (!Game.IsValid())
+    if (!Game)
     {
         UE_LOG(SGLogGameMode, Fatal, TEXT("Game model is null! Abort."))
     }
@@ -38,7 +39,7 @@ void ASGGameMode::StartPlay()
     GridView = GetWorld()->SpawnActorDeferred<ASGGrid>(GridViewClass, GridOrigin);
     check(GridView);
 
-    check(Game->getGrid().IsValid());
+    check(Game->getGrid());
     GridView->SetModel(Game->getGrid(), CellSizeWorld);
 
     // Finishing spawn, after that actors BeginPlay will be called
@@ -48,6 +49,11 @@ void ASGGameMode::StartPlay()
     check(SnakeView);
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
     SnakeView->FinishSpawning(GridOrigin);
+
+    FoodView = GetWorld()->SpawnActorDeferred<ASGFood>(FoodViewClass, GridOrigin);
+    check(FoodView);
+    FoodView->SetModel(Game->getFood(), CellSizeWorld, Game->getGrid()->getSize());
+    FoodView->FinishSpawning(GridOrigin);
 
     const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
     check(PlayerController);
@@ -70,6 +76,7 @@ void ASGGameMode::UpdateColors(uint32 TableRowIndex)
 
     GridView->UpdateColors(*Colors);
     SnakeView->SetColor(*Colors);
+    FoodView->SetColor(Colors->FoodColor);
 
     auto* Fog = Cast<AExponentialHeightFog>(UGameplayStatics::GetActorOfClass(GetWorld(), AExponentialHeightFog::StaticClass()));
     if (!Fog || !Fog->GetComponent()) return;
@@ -94,7 +101,7 @@ CoreGame::Settings ASGGameMode::GetGameSettings() const
     CoreGame::Settings Settings;
     Settings.gridSize = CoreGame::Size{GridSize.X, GridSize.Y};
     Settings.snakeLength = SnakeDefaultLength;
-    Settings.snakePosition = CoreGame::Position{GridSize.X / 2, GridSize.Y / 2};
+    Settings.snakePosition = CoreGame::Grid::getCenter(Settings.gridSize);
     Settings.tickInterval = GameTickInterval;
 
     return Settings;
@@ -107,6 +114,7 @@ void ASGGameMode::ResetGame()
     Input = CoreGame::Input::Default;
     GridView->SetModel(Game->getGrid(), CellSizeWorld);
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
+    FoodView->SetModel(Game->getFood(), CellSizeWorld, Game->getGrid()->getSize());
     UpdateColors(ColorsDataTableRowIndex);
 }
 

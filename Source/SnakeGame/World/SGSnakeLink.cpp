@@ -2,6 +2,8 @@
 
 #include "World/SGSnakeLink.h"
 
+#include "Utils/SGUtils.h"
+
 // Sets default values
 ASGSnakeLink::ASGSnakeLink()
 {
@@ -27,5 +29,6 @@ void ASGSnakeLink::SetScale(uint32 CellSize)
     const FBox BoundingBox = LinkMesh->GetStaticMesh()->GetBoundingBox();
     const FVector BoxSize = BoundingBox.GetSize();
     check(BoxSize.X != 0 && BoxSize.Y != 0);
-    LinkMesh->SetRelativeScale3D(FVector(CellSize / BoxSize.X, CellSize / BoxSize.Y, CellSize / BoxSize.Z));
+    LinkMesh->SetRelativeScale3D(SGUtils::GetWorldScale(LinkMesh, FVector(CellSize)));
+    ;
 }

@@ -4,6 +4,7 @@
 
 #include "SGSnakeLink.h"
 #include "SGWorldTypes.h"
+#include "Utils/SGUtils.h"
 
 // Sets default values
 ASGSnake::ASGSnake()
@@ -22,6 +23,8 @@ void ASGSnake::SetModel(const TSharedPtr<CoreGame::Snake>& SnakeModel, uint32 In
 
 void ASGSnake::SetColor(const FSGColors& Colors)
 {
+    BodyColor = Colors.SnakeBodyColor;
+
     for (int i = 0; i < SnakeLinks.Num(); ++i)
     {
         SnakeLinks[i]->SetColor(i == 0 ? Colors.SnakeHeadColor : Colors.SnakeBodyColor);
@@ -48,25 +51,24 @@ void ASGSnake::CreateLinks()
     uint32 i = 0;
     for (const auto& LinkGridPosition : SnakePtr.Pin()->links())
     {
-        auto LinkClass = i == 0 ? SnakeHeadClass : SnakeBodyClass;
-        auto* LinkActor = GetWorld()->SpawnActorDeferred<ASGSnakeLink>(LinkClass, FTransform::Identity);
-        LinkActor->SetScale(CellSizeWorld);
-        UpdateLinkPosition(LinkActor, LinkGridPosition);
-        LinkActor->FinishSpawning(FTransform::Identity);
-
-        SnakeLinks.Add(LinkActor);
+        SpawnLink(LinkGridPosition, i == 0 ? SnakeHeadClass : SnakeBodyClass);
         ++i;
     }
 }
 
-void ASGSnake::UpdateLinkPosition(ASGSnakeLink* Link, const CoreGame::Position& GridPosition)
+ASGSnakeLink* ASGSnake::SpawnLink(const CoreGame::Position& Position, TSubclassOf<ASGSnakeLink> LinkClass)
 {
-    if (!Link) return;
-    FVector Position;
-    Position.X = (GridSize.height - 1 - GridPosition.y) * CellSizeWorld;
-    Position.Y = GridPosition.x * CellSizeWorld;
+    check(GetWorld());
+    auto* LinkActor = GetWorld()->SpawnActorDeferred<ASGSnakeLink>(LinkClass, FTransform::Identity);
+    check(LinkActor);
 
-    Link->SetActorLocation(Position + FVector(CellSizeWorld * 0.5));
+    LinkActor->SetScale(CellSizeWorld);
+    LinkActor->SetActorLocation(SGUtils::GridToWorld(Position, CellSizeWorld, GridSize, 0.5));
+    LinkActor->FinishSpawning(FTransform::Identity);
+
+    SnakeLinks.Add(LinkActor);
+
+    return LinkActor;
 }
 
 // Called every frame
@@ -74,11 +76,21 @@ void ASGSnake::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    uint32 i = 0;
+    int32 i = 0;
     for (const auto& LinkGridPosition : SnakePtr.Pin()->links())
     {
-        auto* LinkActor = SnakeLinks[i];
-        UpdateLinkPosition(LinkActor, LinkGridPosition);
+        ASGSnakeLink* LinkActor;
+        if (i >= SnakeLinks.Num())
+        {
+            LinkActor = SpawnLink(LinkGridPosition, SnakeBodyClass);
+            LinkActor->SetColor(BodyColor);
+        }
+        else
+        {
+            LinkActor = SnakeLinks[i];
+        }
+
+        LinkActor->SetActorLocation(SGUtils::GridToWorld(LinkGridPosition, CellSizeWorld, GridSize, 0.5));
         ++i;
     }
 }
