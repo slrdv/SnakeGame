@@ -76,7 +76,7 @@ void ASGGameMode::UpdateColors(uint32 TableRowIndex)
 
     GridView->UpdateColors(*Colors);
     SnakeView->SetColor(*Colors);
-    FoodView->SetColor(*Colors);
+    FoodView->SetColor(Colors->FoodColor);
 
     auto* Fog = Cast<AExponentialHeightFog>(UGameplayStatics::GetActorOfClass(GetWorld(), AExponentialHeightFog::StaticClass()));
     if (!Fog || !Fog->GetComponent()) return;

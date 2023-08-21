@@ -25,11 +25,11 @@ void ASGFood::SetModel(const TSharedPtr<CoreGame::Food>& SnakeModel, uint32 InCe
     FoodMesh->SetRelativeScale3D(SGUtils::GetWorldScale(FoodMesh, FVector(InCellSizeWorld)));
 }
 
-void ASGFood::SetColor(const FSGColors& Colors)
+void ASGFood::SetColor(const FLinearColor& Color)
 {
     auto* Material = FoodMesh->CreateAndSetMaterialInstanceDynamic(0);
     if (!Material) return;
-    Material->SetVectorParameterValue("Color", Colors.FoodColor);
+    Material->SetVectorParameterValue("Color", Color);
 }
 
 void ASGFood::Tick(float DeltaTime)

@@ -18,7 +18,7 @@ public:
 
     void SetModel(const TSharedPtr<CoreGame::Food>& FoodModel, uint32 InCellSizeWorld, const CoreGame::Size& InGridSize);
 
-    void SetColor(const FSGColors& Color);
+    void SetColor(const FLinearColor& Color);
 
     virtual void Tick(float DeltaTime) override;
 
@@ -32,6 +32,4 @@ private:
     TWeakPtr<CoreGame::Food> FoodPtr;
     uint32 CellSizeWorld;
     CoreGame::Size GridSize;
-
-    void SetScale(uint32 CellSize);
 };
