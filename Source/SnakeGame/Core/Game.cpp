@@ -10,6 +10,9 @@ Game::Game(const Settings& settings) : c_settings(settings)
 {
     m_grid = MakeShared<Grid>(settings.gridSize);
     m_snake = MakeShared<Snake>(settings.snakeLength, settings.snakePosition);
+    checkf(m_grid->isEmpty(m_snake->head()->GetValue()), TEXT("Error: Invalid snake positon"));
+    checkf(m_grid->isEmpty(m_snake->tail()->GetValue()), TEXT("Error: Snake length too large"));
+
     m_food = MakeShared<Food>();
 
     m_grid->updateSnake(m_snake->head());

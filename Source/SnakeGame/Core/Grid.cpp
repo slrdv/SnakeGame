@@ -74,6 +74,12 @@ bool Grid::getRandomEmptyPosition(Position& outPosition) const
     return false;
 }
 
+bool Grid::isEmpty(const Position& position) const
+{
+    const uint32 index = posToIndex(position);
+    return index < static_cast<uint32>(m_cells.Num()) && m_cells[index] == CellType::Empty;
+}
+
 void Grid::printDebug() const
 {
 // Remove from shipping build

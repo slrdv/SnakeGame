@@ -30,6 +30,8 @@ namespace CoreGame
 
         bool getRandomEmptyPosition(Position& outPosition) const;
 
+        bool isEmpty(const Position& position) const;
+
     private:
         const Size s_size;
         TArray<CellType> m_cells;

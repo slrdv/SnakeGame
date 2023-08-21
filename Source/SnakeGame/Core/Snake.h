@@ -15,6 +15,8 @@ namespace CoreGame
 
         PositionListNode* head() const { return m_links.GetHead(); }
 
+        PositionListNode* tail() const { return m_links.GetTail(); }
+
         void move(const Input& input);
 
         void feed();
