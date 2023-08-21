@@ -24,10 +24,23 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 
+    /**
+     * Set Grid actor model
+     * @param Grid grid model object
+     * @param CellSize world size of the cell in UE units
+     */
     void SetModel(const TSharedPtr<CoreGame::Grid>& Grid, uint32 CellSize);
 
+    /**
+     * Returns Grid actor width
+     * @return uint32 Grid actor width
+     */
     FORCEINLINE uint32 GetWidthWorld() const { return CoreGridSize.width * CellSizeWorld; }
 
+    /**
+     * Returns Grid actor height
+     * @return uint32 Grid actor height
+     */
     FORCEINLINE uint32 GetHeightWorld() const { return CoreGridSize.height * CellSizeWorld; }
 
     /**
