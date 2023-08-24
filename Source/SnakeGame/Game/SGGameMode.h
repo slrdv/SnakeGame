@@ -79,6 +79,8 @@ private:
 
     CoreGame::Input Input = CoreGame::Input::Default;
 
+    bool bCanReset{false};
+
     // UPROPERTY(), because it may be accidentally deleted by GC
     UPROPERTY()
     TObjectPtr<ASGGrid> GridView;
@@ -92,6 +94,8 @@ private:
     UFUNCTION(Exec, Category = "Debug")
     void NextColor();
 
+    void SubscribeGameEvents();
+
     CoreGame::Settings GetGameSettings() const;
     void ResetGame();
     void SetupInput();
@@ -99,4 +103,5 @@ private:
     void OnInputRight(const FInputActionValue& InputValue);
     void OnInputUp(const FInputActionValue& InputValue);
     void OnInputReset(const FInputActionValue& InputValue);
+    void OnExplosionFinished();
 };

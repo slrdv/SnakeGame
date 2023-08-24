@@ -32,6 +32,7 @@ void ASGGameMode::StartPlay()
     {
         UE_LOG(SGLogGameMode, Fatal, TEXT("Game model is null! Abort."))
     }
+    SubscribeGameEvents();
 
     const FTransform GridOrigin = FTransform::Identity;
 
@@ -49,6 +50,8 @@ void ASGGameMode::StartPlay()
     check(SnakeView);
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
     SnakeView->FinishSpawning(GridOrigin);
+
+    SnakeView->OnExplosionFinishedDelegate.BindUObject(this, &ThisClass::OnExplosionFinished);
 
     FoodView = GetWorld()->SpawnActorDeferred<ASGFood>(FoodViewClass, GridOrigin);
     check(FoodView);
@@ -109,13 +112,21 @@ CoreGame::Settings ASGGameMode::GetGameSettings() const
 
 void ASGGameMode::ResetGame()
 {
+    if (!bCanReset) return;
+
     Game.Reset(new CoreGame::Game(GetGameSettings()));
     check(Game);
+
+    SubscribeGameEvents();
+
     Input = CoreGame::Input::Default;
     GridView->SetModel(Game->getGrid(), CellSizeWorld);
     SnakeView->SetModel(Game->getSnake(), CellSizeWorld, Game->getGrid()->getSize());
     FoodView->SetModel(Game->getFood(), CellSizeWorld, Game->getGrid()->getSize());
+
     UpdateColors(ColorsDataTableRowIndex);
+
+    bCanReset = false;
 }
 
 void ASGGameMode::SetupInput()
@@ -160,4 +171,33 @@ void ASGGameMode::OnInputReset(const FInputActionValue& InputValue)
     {
         ResetGame();
     }
+}
+
+void ASGGameMode::OnExplosionFinished()
+{
+    bCanReset = true;
+}
+
+void ASGGameMode::SubscribeGameEvents()
+{
+    Game->subscribeGameEvent(
+        [&](CoreGame::GameEvent EventType)
+        {
+            switch (EventType)
+            {
+                case CoreGame::GameEvent::GameOver:
+                    UE_LOG(SGLogGameMode, Display, TEXT("Game Over! Score: %d"), Game->getScore());
+                    SnakeView->Explode();
+                    break;
+                case CoreGame::GameEvent::GameCompleted:
+                    UE_LOG(SGLogGameMode, Display, TEXT("Game Completed! Score: %d"), Game->getScore());
+                    bCanReset = true;
+                    break;
+                case CoreGame::GameEvent::FoodTaken:
+                    UE_LOG(SGLogGameMode, Display, TEXT("Food Taken! Score: %d"), Game->getScore());
+                    FoodView->Explode();
+                    break;
+                default: break;
+            }
+        });
 }

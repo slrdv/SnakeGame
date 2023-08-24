@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SGWorldTypes.h"
 #include "GameFramework/Actor.h"
 #include "Core/Food.h"
 #include "SGFood.generated.h"
+
+class UNiagaraSystem;
 
 UCLASS()
 class SNAKEGAME_API ASGFood : public AActor
@@ -32,14 +33,23 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 
-private:
+    void Explode() const;
+
+protected:
     UPROPERTY(VisibleAnywhere)
     USceneComponent* Origin;
 
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* FoodMesh;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+    TObjectPtr<UNiagaraSystem> ExplosionEffect;
+
+private:
     TWeakPtr<CoreGame::Food> FoodPtr;
+
     uint32 CellSizeWorld;
     CoreGame::Size GridSize;
+
+    FLinearColor MeshColor;
 };

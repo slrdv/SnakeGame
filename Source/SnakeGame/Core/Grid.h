@@ -17,7 +17,7 @@ namespace CoreGame
          */
         static Position getCenter(const Size& size) { return Position{size.width / 2 + 1, size.height / 2 + 1}; }
 
-        Grid(const Size& size);
+        Grid(const Size& size, const IPositionRandomizerPtr& randomizer = MakeShared<PositionRandomizer>());
 
         /**
          * Returns grid size include walls (width + 2, height + 2)
@@ -67,6 +67,8 @@ namespace CoreGame
         const Size s_size;
         TArray<CellType> m_cells;
 
+        TSharedPtr<IPositionRandomizer> m_positionRandomizer;
+
         void initGrid();
 
         void clear(CellType cellType);
@@ -74,8 +76,6 @@ namespace CoreGame
         FORCEINLINE uint32 posToIndex(uint32 x, uint32 y) const { return y * s_size.width + x; }
 
         FORCEINLINE uint32 posToIndex(const Position& position) const { return posToIndex(position.x, position.y); }
-
-        FORCEINLINE Position indexToPos(uint32 index) const { return {index % s_size.width, index / s_size.width}; }
     };
 
 }  // namespace CoreGame

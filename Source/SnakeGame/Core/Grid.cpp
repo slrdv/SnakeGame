@@ -7,7 +7,8 @@ DEFINE_LOG_CATEGORY_STATIC(SGLogCoreGrid, All, All);
 
 using namespace CoreGame;
 
-Grid::Grid(const Size& size) : s_size(Size{size.width + 2, size.height + 2})
+Grid::Grid(const Size& size, const IPositionRandomizerPtr& randomizer)
+    : s_size(Size{size.width + 2, size.height + 2}), m_positionRandomizer(randomizer)
 {
     initGrid();
 }
@@ -58,20 +59,7 @@ void Grid::clear(CellType cellType)
 
 bool Grid::getRandomEmptyPosition(Position& outPosition) const
 {
-    const uint32 randomIndex = FMath::RandRange(0, m_cells.Num() - 1);
-
-    uint32 i = randomIndex;
-    do
-    {
-        i = (i + 1) % m_cells.Num();
-        if (m_cells[i] == CellType::Empty)
-        {
-            outPosition = indexToPos(i);
-            return true;
-        }
-    } while (i != randomIndex);
-
-    return false;
+    return m_positionRandomizer->getPosition(outPosition, m_cells, s_size);
 }
 
 bool Grid::isEmpty(const Position& position) const
