@@ -31,10 +31,23 @@ void ASGSnake::SetColor(const FSGColors& Colors)
     }
 }
 
-// Called when the game starts or when spawned
-void ASGSnake::BeginPlay()
+void ASGSnake::Explode()
 {
-    Super::BeginPlay();
+    LinkIndex = 0;
+    GetWorldTimerManager().SetTimer(ExplosionTimerHandle, this, &ThisClass::OnLinkExplosion, ExplosionRate, true, 0);
+}
+
+void ASGSnake::OnLinkExplosion()
+{
+    if (LinkIndex == SnakeLinks.Num())
+    {
+        GetWorldTimerManager().ClearTimer(ExplosionTimerHandle);
+        OnExplosionFinishedDelegate.Execute();
+    }
+    else
+    {
+        SnakeLinks[LinkIndex++]->Explode();
+    }
 }
 
 void ASGSnake::CreateLinks()

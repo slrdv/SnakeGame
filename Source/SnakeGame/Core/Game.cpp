@@ -32,15 +32,17 @@ bool Game::updateTime(float delta)
 void Game::checkHit()
 {
     const CellType hitCell = m_grid->getCell(m_snake->head()->GetValue());
+
     if (hitCell == CellType::Snake || hitCell == CellType::Wall)
     {
         m_gameOver = true;
-        UE_LOG(SGLogCoreGame, Display, TEXT("GameOver! Score: %d"), m_score);
+        broadcastGameEvent(GameEvent::GameOver);
     }
     else if (hitCell == CellType::Food)
     {
         m_snake->feed();
         ++m_score;
+        broadcastGameEvent(GameEvent::FoodTaken);
         updateFoodPosition();
     }
 }
@@ -56,7 +58,18 @@ void Game::updateFoodPosition()
     else
     {
         m_gameOver = true;
-        UE_LOG(SGLogCoreGame, Display, TEXT("GameCompleted! Score: %d"), m_score);
+        broadcastGameEvent(GameEvent::GameCompleted);
+    }
+}
+
+void Game::broadcastGameEvent(GameEvent gameEvent)
+{
+    for (const auto& callback : m_gameEventCallbacks)
+    {
+        if (callback)
+        {
+            callback(gameEvent);
+        }
     }
 }
 
@@ -68,5 +81,10 @@ void Game::update(float delta, const Input& input)
     if (m_gameOver) return;
 
     m_grid->updateSnake(m_snake->head());
-    m_grid->printDebug();
+    // m_grid->printDebug();
+}
+
+void Game::subscribeGameEvent(const GameEventCallback& callback)
+{
+    m_gameEventCallbacks.Add(callback);
 }

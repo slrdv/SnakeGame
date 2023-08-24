@@ -53,4 +53,13 @@ namespace CoreGame
     using PositionList = TDoubleLinkedList<Position>;
     using PositionListNode = PositionList::TDoubleLinkedListNode;
 
+    enum class GameEvent
+    {
+        GameOver = 0,
+        GameCompleted,
+        FoodTaken
+    };
+
+    using GameEventCallback = TFunction<void(GameEvent)>;
+
 }  // namespace CoreGame

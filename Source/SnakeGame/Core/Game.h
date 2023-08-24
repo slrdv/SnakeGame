@@ -40,20 +40,26 @@ namespace CoreGame
          */
         void update(float delta, const Input& input);
 
+        void subscribeGameEvent(const GameEventCallback& callback);
+
+        uint32 getScore() const { return m_score; }
+
     private:
         const Settings c_settings;
         TSharedPtr<Grid> m_grid;
         TSharedPtr<Snake> m_snake;
         TSharedPtr<Food> m_food;
+
         float m_timeAcc{0.0f};
         bool m_gameOver{false};
         uint32 m_score{0};
 
+        TArray<GameEventCallback> m_gameEventCallbacks;
+
         bool updateTime(float delta);
-
         void checkHit();
-
         void updateFoodPosition();
+        void broadcastGameEvent(GameEvent gameEvent);
     };
 
 }  // namespace CoreGame
