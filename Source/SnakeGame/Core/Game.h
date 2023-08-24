@@ -13,7 +13,7 @@ namespace CoreGame
     class Game
     {
     public:
-        Game(const Settings& settings);
+        Game(const Settings& settings, const IPositionRandomizerPtr& randomizer = MakeShared<PositionRandomizer>());
 
         /**
          * Returns pointer to the core grid object

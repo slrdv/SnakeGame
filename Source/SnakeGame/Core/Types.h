@@ -62,4 +62,19 @@ namespace CoreGame
 
     using GameEventCallback = TFunction<void(GameEvent)>;
 
+    class IPositionRandomizer
+    {
+    public:
+        virtual bool getPosition(Position& outPosition, const TArray<CellType>& cells, const Size& size) const = 0;
+        virtual ~IPositionRandomizer() = default;
+    };
+
+    using IPositionRandomizerPtr = TSharedPtr<IPositionRandomizer>;
+
+    class PositionRandomizer : public IPositionRandomizer
+    {
+    public:
+        virtual bool getPosition(Position& position, const TArray<CellType>& cells, const Size& size) const override;
+    };
+
 }  // namespace CoreGame

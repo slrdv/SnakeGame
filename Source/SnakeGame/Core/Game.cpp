@@ -6,9 +6,9 @@ DEFINE_LOG_CATEGORY_STATIC(SGLogCoreGame, All, All);
 
 using namespace CoreGame;
 
-Game::Game(const Settings& settings) : c_settings(settings)
+Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) : c_settings(settings)
 {
-    m_grid = MakeShared<Grid>(settings.gridSize);
+    m_grid = MakeShared<Grid>(settings.gridSize, randomizer);
     m_snake = MakeShared<Snake>(settings.snakeLength, settings.snakePosition);
     checkf(m_grid->isEmpty(m_snake->head()->GetValue()), TEXT("Error: Invalid snake positon"));
     checkf(m_grid->isEmpty(m_snake->tail()->GetValue()), TEXT("Error: Snake length too large"));
